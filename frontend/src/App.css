@@ -1,0 +1,45 @@
+/* App.css */
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  padding: 24px;
+}
+
+.app-title {
+  color: #1890ff !important;
+  margin: 5px;
+}
+
+.editor-container {
+  margin-bottom: 16px;
+}
+
+.submit-button {
+  margin-right: 16px;
+}
+
+.output-card {
+  padding: 16px;
+  background-color: #f0f0f0;
+}
+
+.footer {
+  text-align: center;
+  padding: 8px;
+  background-color: #001529;
+  color: #fff;
+}
+
+.footer a {
+  color: #fff;
+}
+
+/* Additional styles for Monaco Editor if needed */
+.monaco-editor {
+  border: 1px solid #d9d9d9;
+}
