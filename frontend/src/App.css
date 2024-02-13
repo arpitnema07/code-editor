@@ -1,38 +1,57 @@
 /* App.css */
+* {
+  margin: 0;
+  padding: 0;
+}
 .layout {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  margin: 0;
+  padding: 0;
 }
 
 .content {
   flex: 1;
-  padding: 24px;
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 .app-title {
-  color: #1890ff !important;
-  margin: 5px;
+  color: white;
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  background-color: rgb(34, 34, 34);
+}
+
+.top-menu {
+  padding: 10px 10px 0px 10px;
+  display: "flex";
+  justify-content: "space-between";
 }
 
 .editor-container {
-  margin-bottom: 16px;
+  margin-bottom: 50px;
 }
 
 .submit-button {
-  margin-right: 16px;
-}
-
-.output-card {
-  padding: 16px;
-  background-color: #f0f0f0;
+  margin-left: auto;
 }
 
 .footer {
   text-align: center;
-  padding: 8px;
-  background-color: #001529;
+  background-color: rgb(34, 34, 34);
   color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  align-items: center;
+  margin-top: auto;
 }
 
 .footer a {
@@ -42,4 +61,122 @@
 /* Additional styles for Monaco Editor if needed */
 .monaco-editor {
   border: 1px solid #d9d9d9;
+  margin: 8px;
+  padding-top: 12px;
+}
+
+.col-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Make sure the container takes full height */
+}
+
+.input-card,
+.output-card {
+  flex: 1; /* Distribute available space evenly */
+  margin: 8px; /* Add some margin for spacing */
+  display: flex;
+  flex-direction: column;
+}
+
+#program-input {
+  flex: 1; /* Make textarea take all available space */
+  outline: none; /* Remove default focus outline */
+  background-color: #f5f5f5; /* Set border color to transparent */
+  border-color: transparent; /* Set border color to transparent */
+  padding: 8px;
+  width: 100%;
+  border-radius: 7px;
+  min-height: 100px;
+}
+#program-input:focus {
+  outline: none; /* Remove default focus outline */
+  border-color: transparent; /* Set border color to transparent */
+}
+.output-card pre {
+  flex: 1; /* Make <pre> take all available space */
+  background-color: #f5f5f5;
+  padding: 8px;
+  overflow: auto;
+  margin: 0;
+  min-height: 100px;
+  border-radius: 7px;
+}
+
+.auth-block {
+  margin: 40px auto;
+  width: fit-content;
+}
+
+/* HomePage.css */
+
+.homepage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.video-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.video {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Disable video controls */
+}
+
+.h-content {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+}
+
+.centered-content {
+  text-align: center;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.try-now-button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.try-now-button a {
+  color: #fff;
+}
+
+.try-now-button:hover {
+  background-color: #0056b3;
+}
+
+.code-editor-text {
+  margin-top: 20px;
+  font-size: 1.2rem;
 }

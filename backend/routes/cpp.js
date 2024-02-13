@@ -1,42 +1,88 @@
 // java.js
 
-const express = require("express");
-const { exec } = require("child_process");
-const fs = require("fs");
+import { Router } from "express";
+import { spawn } from "child_process";
+import { writeFileSync, unlinkSync } from "fs";
 
-const router = express.Router();
+const router = Router();
 
 router.post("/", async (req, res) => {
-  const { code } = req.body;
+  const { code, input } = req.body;
 
   // Create a temporary file and write the code to it
   const tempFilePath = "./program.cpp";
-  fs.writeFileSync(tempFilePath, code);
+  writeFileSync(tempFilePath, code);
 
-  const compileCommand = `gcc ${tempFilePath} -o program`;
-  const runCommand = `.\\program`;
+  const compileCommand = "g++";
+  const compileArgs = [tempFilePath, "-o", "program"];
+  const runCommand = "./program";
 
-  // Compile the Java code
-  exec(compileCommand, (compileError, compileStdout, compileStderr) => {
-    if (compileError) {
+  // Spawn a new process to compile the C code
+  const compileProcess = spawn(compileCommand, compileArgs);
+  let compileErr = "";
+
+  compileProcess.stderr.on("data", (data) => {
+    compileErr += data.toString();
+  });
+  compileProcess.stdout.on("data", (data) => {
+    compileErr += data.toString();
+  });
+  compileProcess.on("close", (compileCode) => {
+    if (compileCode !== 0) {
       // Cleanup: Delete the temporary file
-      fs.unlinkSync(tempFilePath);
-      return res.status(500).json({ error: compileError.message });
+      unlinkSync(tempFilePath);
+      res
+        .status(500)
+        .json({
+          error: `Compilation failed with code ${compileCode}\n${compileErr}`,
+        });
+      return;
     }
 
-    // Run the compiled Java code
-    exec(runCommand, (runError, runStdout, runStderr) => {
-      // Cleanup: Delete the temporary file
-      fs.unlinkSync(tempFilePath);
-      fs.unlinkSync("program.exe");
+    // Spawn a new process to run the compiled C program
+    const runProcess = spawn(runCommand);
 
-      if (runError) {
-        res.status(500).json({ error: runError.message });
+    let runStdout = "";
+    let runStderr = "";
+
+    runProcess.stdout.on("data", (data) => {
+      runStdout += data.toString();
+    });
+
+    runProcess.stderr.on("data", (data) => {
+      runStderr += data.toString();
+    });
+
+    runProcess.on("close", (runCode) => {
+      // Cleanup: Delete the temporary file and compiled program
+      unlinkSync(tempFilePath);
+      unlinkSync("program.exe");
+
+      if (runCode !== 0) {
+        res.status(500).json({
+          error: `Execution failed with code ${runCode}\n${compileErr}`,
+        });
       } else {
         res.json({ output: runStdout, error: runStderr });
       }
     });
+
+    // Write input to the process
+    runProcess.stdin.write(input);
+    runProcess.stdin.end();
+
+    // Set a timeout to kill the process if it takes too long
+    const timeoutMilliseconds = 10000; // Adjust the timeout as needed (e.g., 10 seconds)
+    const timeoutId = setTimeout(() => {
+      runProcess.kill(); // Terminate the process
+      res.status(500).json({ error: "Execution timed out" });
+    }, timeoutMilliseconds);
+
+    // Clear the timeout if the process finishes before the timeout
+    runProcess.on("exit", () => {
+      clearTimeout(timeoutId);
+    });
   });
 });
 
-module.exports = router;
+export default router;

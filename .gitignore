@@ -22,3 +22,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+.env
+tcs
+python
+2024*
+dateString.txt
+program.txt
